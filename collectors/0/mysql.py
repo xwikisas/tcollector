@@ -349,6 +349,10 @@ def collect(db):
     state = state.lower().replace(" ", "_")
     printmetric("connection_states", count, " state=%s" % state)
 
+  # XWiki SAS - Slowest query
+  mysql_slowest_query = db.query("select time,db from information_schema.processlist where command!='Sleep' and command!='Connect' and time>='300' order by time DESC limit 1;")
+  if mysql_slowest_query:
+    printmetric("slowest_query", mysql_slowest_query[0][0], " db=%s" % mysql_slowest_query[0][1] )
 
 def main(args):
   """Collects and dumps stats from a MySQL server."""
