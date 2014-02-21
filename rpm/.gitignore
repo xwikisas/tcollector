@@ -1,8 +1,0 @@
-.dist-stamp
-destdir
-filelist
-manifest.txt
-real.spec
-*.rpm
-*.swix
-common.spec

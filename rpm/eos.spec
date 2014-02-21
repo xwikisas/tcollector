@@ -1,2 +1,0 @@
-Requires:       ProcMgr
-Requires:       Launcher
