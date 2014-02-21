@@ -192,10 +192,8 @@ def main():
 
   # Get the list of block devices.
   drives = [dev[5:] for dev in glob.glob("/dev/[hs]d[a-z]")]
-  # Exit gracefully if no block devices found
   if not drives:
     sys.exit(13)
-
 
   # to make sure we are done with smartctl in COMMAND_TIMEOUT seconds
   signal.signal(signal.SIGALRM, alarm_handler)
@@ -204,6 +202,7 @@ def main():
     sys.exit(13)
 
   while True:
+    nooutput = True
     for drive in drives:
       signal.alarm(COMMAND_TIMEOUT)
       smart_ctl = subprocess.Popen(SMART_CTL + " -i -A /dev/" + drive,
@@ -216,6 +215,10 @@ def main():
         else:
           print >>sys.stderr, "Command exited with: %d" % smart_ctl.returncode
       process_output(drive, smart_output)
+      if 'Device does not support SMART' not in smart_output:
+        nooutput = False
+    if nooutput:
+      sys.exit(13)
 
     sys.stdout.flush()
     time.sleep(SLEEP_BETWEEN_POLLS)
