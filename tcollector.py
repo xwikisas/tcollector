@@ -294,7 +294,7 @@ class ReaderThread(threading.Thread):
                 result = re.findall('^VM_Type:(.*)',content, re.M)
                 self.vm_type = result[0]
         except IOError as e:
-            log.INFO("Unable to open /glimpse_info file required for vm_type tag. Moving on...")
+            LOG.info("Unable to open /glimpse_info file required for vm_type tag. Moving on...")
         # XWikiSAS - end
 
     def run(self):
