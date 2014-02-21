@@ -19,7 +19,7 @@ import time
 
 from collectors.lib import utils
 
-COLLECTION_INTERVAL = 15  # seconds
+COLLECTION_INTERVAL = 60  # seconds
 
 nfs_client_proc_names = {
     "proc4": (

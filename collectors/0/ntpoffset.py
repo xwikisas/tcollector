@@ -4,7 +4,7 @@ import time
 import sys
 from collectors.lib import ntplib
 
-COLLECTION_INTERVAL = 15  # seconds
+COLLECTION_INTERVAL = 60  # seconds
 NTP_SERVER = 'ntp.ovh.net'
 
 def main():

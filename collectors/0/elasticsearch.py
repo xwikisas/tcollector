@@ -28,7 +28,7 @@ import time
 from collectors.lib import utils
 
 
-COLLECTION_INTERVAL = 15  # seconds
+COLLECTION_INTERVAL = 60  # seconds
 DEFAULT_TIMEOUT = 10.0    # seconds
 ES_HOST = "localhost"
 ES_PORT = 9200  # TCP port on which ES listens.

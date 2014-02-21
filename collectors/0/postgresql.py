@@ -30,7 +30,7 @@ try:
 except ImportError:
   psycopg2 = None # handled in main()
 
-COLLECTION_INTERVAL = 15 # seconds
+COLLECTION_INTERVAL = 60 # seconds
 CONNECT_TIMEOUT = 2 # seconds
 
 from collectors.lib import utils
