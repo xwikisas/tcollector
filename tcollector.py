@@ -288,7 +288,8 @@ class ReaderThread(threading.Thread):
         self.default_host_tag = default_host_tag
 
 	# XWikiSAS - add the vm_type tag to all metrics
-        try:
+        self.vm_type = ''
+	try:
             with open('/glimpse_info') as file:
                 content = file.read()
                 result = re.findall('^VM_Type:(.*)',content, re.M)
@@ -352,7 +353,7 @@ class ReaderThread(threading.Thread):
             line += " host=%s" % self.default_host_tag
 
         # XWikiSAS - Add vm_type tag to all metrics
-        if " vm_type=" not in tags:
+        if " vm_type=" not in tags and self.vm_type != '':
             tags += " vm_type=%s" % self.vm_type
             line += " vm_type=%s" % self.vm_type
         # XWikiSAS - end
