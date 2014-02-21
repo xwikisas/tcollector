@@ -350,7 +350,7 @@ def collect(db):
     printmetric("connection_states", count, " state=%s" % state)
 
   # XWiki SAS - Slowest query
-  mysql_slowest_query = db.query("select time,db from information_schema.processlist where command!='Sleep' and command!='Connect' and time>='300' order by time DESC limit 1;")
+  mysql_slowest_query = db.query("select time,db from information_schema.processlist where command!='Sleep' and command!='Connect' command!='Binlog Dump' and time>='300' order by time DESC limit 1;")
   if mysql_slowest_query:
     printmetric("slowest_query", mysql_slowest_query[0][0], " db=%s" % mysql_slowest_query[0][1] )
 
