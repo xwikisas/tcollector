@@ -287,6 +287,16 @@ class ReaderThread(threading.Thread):
         self.evictinterval = evictinterval
         self.default_host_tag = default_host_tag
 
+	# XWikiSAS - add the vm_type tag to all metrics
+        try:
+            with open('/glimpse_info') as file:
+                content = file.read()
+                result = re.findall('^VM_Type:(.*)',content, re.M)
+                self.vm_type = result[0]
+        except IOError as e:
+            log.INFO("Unable to open /glimpse_info file required for vm_type tag. Moving on...")
+        # XWikiSAS - end
+
     def run(self):
         """Main loop for this thread.  Just reads from collectors,
            does our input processing and de-duping, and puts the data
@@ -340,6 +350,12 @@ class ReaderThread(threading.Thread):
         if " host=" not in tags:
             tags += " host=%s" % self.default_host_tag
             line += " host=%s" % self.default_host_tag
+
+        # XWikiSAS - Add vm_type tag to all metrics
+        if " vm_type=" not in tags:
+            tags += " vm_type=%s" % self.vm_type
+            line += " vm_type=%s" % self.vm_type
+        # XWikiSAS - end
 
         # De-dupe detection...  To reduce the number of points we send to the
         # TSD, we suppress sending values of metrics that don't change to
