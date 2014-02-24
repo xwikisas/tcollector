@@ -24,6 +24,9 @@ xinit_config_file = '/etc/xinit/xinit.cfg'
 if not os.path.isfile(xinit_config_file):
   sys.exit(13)
 
+if not os.path.islink('/usr/local/xwiki') or not os.path.isdir('/usr/local/xwiki'):
+  sys.exit(13)
+
 URL = ''
 for line in open(xinit_config_file).readlines():
   m = re.search('(#?)CHECK_HTTP_URL="(.*)"', line)
@@ -69,18 +72,19 @@ def main():
         % (ts,xinitmaintenance))
 
     # Crons section
-    proccron_missing = 1
-    httpcron_missing = 1
-    for line in open('/var/spool/cron/crontabs/root').readlines():
-      m = re.search('(#?).*/etc/init.d/xwiki.sh check-proc.*', line)
-      if m and m.group(1) != '#':
-        proccron_missing = 0
-      m = re.search('(#?).*/etc/init.d/xwiki.sh check-http.*', line)
-      if m and m.group(1) != '#':
-        httpcron_missing = 0
-    print ("xwiki.xinit.proccron.missing %d %d"
+    if os.path.isfile('/var/spool/cron/crontabs/root'):
+      proccron_missing = 1
+      httpcron_missing = 1
+      for line in open('/var/spool/cron/crontabs/root').readlines():
+        m = re.search('(#?).*/etc/init.d/xwiki.sh check-proc.*', line)
+        if m and m.group(1) != '#':
+          proccron_missing = 0
+        m = re.search('(#?).*/etc/init.d/xwiki.sh check-http.*', line)
+        if m and m.group(1) != '#':
+          httpcron_missing = 0
+      print ("xwiki.xinit.proccron.missing %d %d"
         % (ts,proccron_missing))
-    print ("xwiki.xinit.httpcron.missing %d %d"
+      print ("xwiki.xinit.httpcron.missing %d %d"
         % (ts,httpcron_missing))
 
     # XInit last run section
