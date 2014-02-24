@@ -4,7 +4,7 @@ import sys
 import time
 from subprocess import check_output as qx
 
-COLLECTION_INTERVAL = 60  # seconds
+COLLECTION_INTERVAL = 300  # seconds
 def main():
   while True:
      ts = int(time.time())
