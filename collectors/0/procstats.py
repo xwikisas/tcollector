@@ -20,7 +20,7 @@ import sys
 import time
 import glob
 
-from collectors.lib import utils
+#from collectors.lib import utils
 
 COLLECTION_INTERVAL = 60  # seconds
 NUMADIR = "/sys/devices/system/node"
@@ -129,8 +129,26 @@ def main():
                 else:
                     value = m.group(2)
                 print ("proc.meminfo.%s %d %s"
-                        % (m.group(1).lower(), ts, value))
+                if m.group(1).lower() == 'memfree':
+                    meminfo_memfree = float(value)
+                elif m.group(1).lower() == 'buffers':
+                    meminfo_buffers = float(value)
+                elif m.group(1).lower() == 'cached':
+                     meminfo_cached = float(value)
+                elif m.group(1).lower() == 'memtotal':
+                     meminfo_memtotal = float(value)
+                elif m.group(1).lower() == 'swaptotal':
+                     meminfo_swaptotal = float(value)
+                elif m.group(1).lower() == 'swapfree':
+                     meminfo_swapfree = float(value)
 
+        # Mem Alert threshold. OK if t<'3'
+        meminfo_realfree = meminfo_memfree + meminfo_buffers + meminfo_cached
+        meminfo_t_mem = meminfo_memtotal / meminfo_realfree
+        meminfo_t_swap = meminfo_swaptotal / meminfo_swapfree
+        print(meminfo_t_swap, '=', meminfo_swaptotal, '/', meminfo_swapfree)
+        print ("proc.meminfo.memthreshold %d %f" % (ts, meminfo_t_mem / meminfo_t_swap))
+    
         # proc.vmstat
         f_vmstat.seek(0)
         ts = int(time.time())
