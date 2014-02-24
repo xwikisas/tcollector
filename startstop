@@ -3,7 +3,7 @@
 # Semi Universal start-stop script
 # Keep it sh compatible, test with bash, dash, ksh, and zsh.
 
-# TSD_HOST=dns.name.of.tsd
+TSD_HOST=tsd.xwikisas.com
 SCRIPT_DIR="$(dirname $(readlink -f $0))"
 TCOLLECTOR_PATH=${TCOLLECTOR_PATH-"${SCRIPT_DIR}"}
 test -n "$TSD_HOST" || {
