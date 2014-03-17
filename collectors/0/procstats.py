@@ -150,7 +150,6 @@ def main():
         meminfo_realfree = meminfo_memfree + meminfo_buffers + meminfo_cached
         meminfo_t_mem = meminfo_memtotal / meminfo_realfree
         meminfo_t_swap = meminfo_swaptotal / meminfo_swapfree
-        print(meminfo_t_swap, '=', meminfo_swaptotal, '/', meminfo_swapfree)
         print ("proc.meminfo.memthreshold %d %f" % (ts, meminfo_t_mem / meminfo_t_swap))
     
         # proc.vmstat
