@@ -84,7 +84,10 @@ def main():
 
     f_uptime = open("/proc/uptime", "r")
     f_meminfo = open("/proc/meminfo", "r")
-    f_vmstat = open("/proc/vmstat", "r")
+    try:
+      f_vmstat = open("/proc/vmstat", "r")
+    except IOError as e:
+      f_vmstat = None
     f_stat = open("/proc/stat", "r")
     f_loadavg = open("/proc/loadavg", "r")
     f_entropy_avail = open("/proc/sys/kernel/random/entropy_avail", "r")
@@ -151,15 +154,16 @@ def main():
         print ("proc.meminfo.memthreshold %d %f" % (ts, meminfo_t_mem / meminfo_t_swap))
     
         # proc.vmstat
-        f_vmstat.seek(0)
-        ts = int(time.time())
-        for line in f_vmstat:
-            m = re.match("(\w+)\s+(\d+)", line)
-            if not m:
-                continue
-            if m.group(1) in ("pgpgin", "pgpgout", "pswpin",
+        if isinstance(f_vmstat, file):
+          f_vmstat.seek(0)
+          ts = int(time.time())
+          for line in f_vmstat:
+              m = re.match("(\w+)\s+(\d+)", line)
+              if not m:
+                  continue
+              if m.group(1) in ("pgpgin", "pgpgout", "pswpin",
                               "pswpout", "pgfault", "pgmajfault"):
-                print "proc.vmstat.%s %d %s" % (m.group(1), ts, m.group(2))
+                  print "proc.vmstat.%s %d %s" % (m.group(1), ts, m.group(2))
 
         # proc.stat
         f_stat.seek(0)
