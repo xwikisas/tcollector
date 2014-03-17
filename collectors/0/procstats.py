@@ -129,6 +129,7 @@ def main():
                 else:
                     value = m.group(2)
                 print ("proc.meminfo.%s %d %s"
+                       % (m.group(1).lower(), ts, value))
                 if m.group(1).lower() == 'memfree':
                     meminfo_memfree = float(value)
                 elif m.group(1).lower() == 'buffers':
