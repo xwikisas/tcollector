@@ -21,6 +21,7 @@ import time
 import glob
 
 from collectors.lib import utils
+from subprocess import check_output
 
 COLLECTION_INTERVAL = 60  # seconds
 NUMADIR = "/sys/devices/system/node"
@@ -262,6 +263,19 @@ def main():
             f.seek(0)
             for line in f:
                 print "proc.scaling.cur %d %s cpu=%s" % (ts, line.rstrip('\n'), cpu_no)
+
+        # proc.maxprocessmemory (excluding java and MySQL)
+	value = 0
+	mysql_pids=check_output(["-c", "pgrep mysql"], shell=True).rstrip().split("\n")
+	java_pids=check_output(["-c", "pgrep java"], shell=True).rstrip().split("\n")
+	ignored_pids=mysql_pids+java_pids
+	all_pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
+	all_pids=list(set(all_pids)-set(ignored_pids))
+	for pid in all_pids:
+	    count=int(check_output(["-c","grep VmRSS /proc/"+pid+"/status 2>/dev/null | sed -e 's/VmRSS:\s*\([0-9]*\) kB/\\1/'"], shell=True).rstrip())
+	    if count>value:
+	      value=count
+	print "proc.maxprocessmemory %d %d" % (ts, value)
 
         sys.stdout.flush()
         time.sleep(COLLECTION_INTERVAL)
