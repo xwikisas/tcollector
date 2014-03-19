@@ -13,8 +13,11 @@ def main():
      ts = int(time.time())
 
      response = client.request(NTP_SERVER, version=3)
+     offset = response.offset
+     if offset<0:
+       offset = 0-offset
      print ("sys.time.ntp_offset %d %.5f"
-        % (ts,response.offset))
+        % (ts,offset))
 
      sys.stdout.flush()
      time.sleep(COLLECTION_INTERVAL)
