@@ -281,7 +281,10 @@ def main():
         all_pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
         all_pids=list(set(all_pids)-set(ignored_pids))
         for pid in all_pids:
-            count=int(subprocess.check_output(["-c","grep VmRSS /proc/"+pid+"/status 2>/dev/null | sed -e 's/VmRSS:\s*\([0-9]*\) kB/\\1/'"], shell=True).rstrip())
+	    count=0
+            countstring=subprocess.check_output(["-c","grep VmRSS /proc/"+pid+"/status 2>/dev/null | sed -e 's/VmRSS:\s*\([0-9]*\) kB/\\1/'"], shell=True).rstrip()
+	    if countstring!='':
+	      count=int(countstring)
             if count>value:
               value=count
         print "proc.maxprocessmemory %d %d" % (ts, value)
